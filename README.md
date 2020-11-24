@@ -52,7 +52,7 @@ inputs:
   reviewdog_flags:
     description: 'Additional reviewdog flags'
     default: ''
-  ### Flags for <linter-name> ###
+  ### Flags for ember-template-lint ###
   locale:
     description: '-locale flag of misspell. (US/UK)'
     default: ''
@@ -67,7 +67,7 @@ on: [pull_request]
 jobs:
   # TODO: change `linter_name`.
   linter_name:
-    name: runner / <linter-name>
+    name: runner / ember-template-lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
