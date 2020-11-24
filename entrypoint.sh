@@ -1,11 +1,12 @@
 #!/bin/sh
-set -e
-
-if [ -n "${GITHUB_WORKSPACE}" ] ; then
-  cd "${GITHUB_WORKSPACE}/${INPUT_WORKDIR}" || exit
-fi
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
+
+cd "${GITHUB_WORKSPACE}/${INPUT_WORKDIR}" || exit 1
+
+if [ ! -f "$(npm bin)/ember-template-lint" ]; then
+  npm install --legacy-peer-deps
+fi
 
 $(npm bin)/ember-template-lint --version
 
