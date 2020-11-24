@@ -10,7 +10,7 @@ fi
 
 $(npm bin)/ember-template-lint --version
 
-$(npm bin)/ember-template-lint \
+$(npm bin)/ember-template-lint ${INPUT_TEMPLATE_LINT_FLAGS:-'.'} \
   | reviewdog -f=rdjson \
       -name="${INPUT_TOOL_NAME}" \
       -reporter="${INPUT_REPORTER:-github-pr-review}" \
