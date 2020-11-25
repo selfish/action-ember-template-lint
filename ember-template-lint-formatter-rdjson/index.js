@@ -67,21 +67,21 @@ function buildRdJsonOutput(results) {
   };
 }
 
-// let data = '';
-//
-// process.stdin.resume();
-// process.stdin.setEncoding('utf8');
-//
-// process.stdin.on('data', function(chunk) {
-//   data += chunk;
-// });
-//
-// process.stdin.on('end', function() {
-//   const parsed = JSON.parse(data);
-//   const rdJson = buildRdJsonOutput(parsed);
-//   console.log(JSON.stringify(rdJson));
-// });
+let data = '';
 
-const data = require('./test-fix.json');
-const rdJson = buildRdJsonOutput(data);
-console.log(JSON.stringify(rdJson));
+process.stdin.resume();
+process.stdin.setEncoding('utf8');
+
+process.stdin.on('data', function(chunk) {
+  data += chunk;
+});
+
+process.stdin.on('end', function() {
+  const parsed = JSON.parse(data);
+  const rdJson = buildRdJsonOutput(parsed);
+  console.log(JSON.stringify(rdJson));
+});
+
+// const data = require('./test-fix.json');
+// const rdJson = buildRdJsonOutput(data);
+// console.log(JSON.stringify(rdJson));
