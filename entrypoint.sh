@@ -12,7 +12,7 @@ fi
 
 "$(npm bin)"/ember-template-lint --json ${INPUT_TEMPLATE_LINT_FLAGS:-'.'} > out.json
 
-cat out.json | node formatter.js | reviewdog -f=rdjson \
+cat out.json | node /formatter.js | reviewdog -f=rdjson \
       -name="${INPUT_TOOL_NAME}" \
       -reporter="${INPUT_REPORTER:-github-pr-review}" \
       -filter-mode="${INPUT_FILTER_MODE}" \
