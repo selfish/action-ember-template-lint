@@ -17,80 +17,41 @@ function utf8length(str) {
   return unescape(encodeURIComponent(str)).length;
 }
 
-function positionFromUTF16CodeUnitOffset(offset, text) {
-  const lines = text.split('\n');
-  let line = 1;
-  let column = 0;
-  let lengthSoFar = 0;
-  for (const sourceLine of lines) {
-    if (offset <= lengthSoFar + sourceLine.length) {
-      const lineText = sourceLine.slice(0, offset - lengthSoFar);
-      // +1 because eslint offset is a bit weird and will append text right
-      // after the offset.
-      column = utf8length(lineText) + 1;
-      break;
-    }
-    lengthSoFar += sourceLine.length + 1; // +1 for line-break.
-    line++;
-  }
-  return { line, column };
-}
-
-function positionFromLineAndUTF16CodeUnitOffsetColumn(line, sourceColumn, sourceLines) {
-  let column = 0;
-  if (sourceLines.length >= line) {
-    const lineText = sourceLines[line - 1].slice(0, sourceColumn);
-    column = utf8length(lineText);
-  }
-  return { line, column };
-}
-
-function commonSuffixLength(str1, str2) {
-  let i;
-  for (i = 0; i < str1.length && i < str2.length; ++i) {
-    if (str1[str1.length - (i + 1)] !== str2[str2.length - (i + 1)]) {
-      break;
-    }
-  }
-  return i;
-}
-
-function buildMinimumSuggestion(result) {
-  const { fix, line, source } = result;
-  const l = commonSuffixLength(fix.text, source.slice(line, line));
+function buildMinimumRange(diagnostic) {
+  const { line, column, source } = diagnostic;
   return {
-    range: {
-      start: positionFromUTF16CodeUnitOffset(line, source),
-      end: positionFromUTF16CodeUnitOffset(line - l, source)
-    },
-    text: fix.text.slice(0, fix.text.length - l)
+    start: { line, column },
+    end: { line, column: column + utf8length(source) }
+  }
+}
+
+function buildMinimumSuggestion(diagnostic) {
+  return {
+    range: buildMinimumRange(diagnostic),
+    text: diagnostic.fix.text
   };
 }
 
 function formatDiagnostic(diagnostic) {
 
-  const {filePath, source} = diagnostic;
-  const sourceLines = source ? source.split('\n') : [];
+  const { filePath } = diagnostic;
 
   let formattedDiagnostic = {
     message: diagnostic.message,
     location: {
       path: filePath,
-      range: {
-        start: positionFromLineAndUTF16CodeUnitOffsetColumn(diagnostic.line, diagnostic.column, sourceLines),
-        end: positionFromLineAndUTF16CodeUnitOffsetColumn(diagnostic.line, diagnostic.column, sourceLines)
-      }
+      range: buildMinimumRange(diagnostic)
     },
     severity: convertSeverity(diagnostic.severity),
     code: {
       value: diagnostic.rule,
-      url: `https://github.com/ember-template-lint/ember-template-lint/blob/master/docs/rule/${diagnostic.rule}.md` //(data.rulesMeta[msg.rule] && data.rulesMeta[msg.rule].docs ? data.rulesMeta[msg.rule].docs.url : '')
+      url: `https://github.com/ember-template-lint/ember-template-lint/blob/master/docs/rule/${diagnostic.rule}.md`
     },
     original_output: JSON.stringify(diagnostic)
   };
 
-  if (formattedDiagnostic.fix) {
-    formattedDiagnostic.suggestions = [buildMinimumSuggestion(formattedDiagnostic)];
+  if (diagnostic.fix) {
+    formattedDiagnostic.suggestions = [buildMinimumSuggestion(diagnostic)];
   }
 
   return formattedDiagnostic;
@@ -106,17 +67,21 @@ function buildRdJsonOutput(results) {
   };
 }
 
-let data = '';
+// let data = '';
+//
+// process.stdin.resume();
+// process.stdin.setEncoding('utf8');
+//
+// process.stdin.on('data', function(chunk) {
+//   data += chunk;
+// });
+//
+// process.stdin.on('end', function() {
+//   const parsed = JSON.parse(data);
+//   const rdJson = buildRdJsonOutput(parsed);
+//   console.log(JSON.stringify(rdJson));
+// });
 
-process.stdin.resume();
-process.stdin.setEncoding('utf8');
-
-process.stdin.on('data', function(chunk) {
-  data += chunk;
-});
-
-process.stdin.on('end', function() {
-  const parsed = JSON.parse(data);
-  const rdJson = buildRdJsonOutput(parsed);
-  console.log(JSON.stringify(rdJson));
-});
+const data = require('./test-fix.json');
+const rdJson = buildRdJsonOutput(data);
+console.log(JSON.stringify(rdJson));
