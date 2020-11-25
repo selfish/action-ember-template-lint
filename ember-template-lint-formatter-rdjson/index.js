@@ -20,8 +20,8 @@ function utf8length(str) {
 function buildMinimumRange(diagnostic) {
   const { line, column, source } = diagnostic;
   return {
-    start: { line, column },
-    end: { line, column: column + utf8length(source) }
+    start: { line, column: column + 1 },
+    end: { line, column: column + utf8length(source) + 1 }
   }
 }
 
