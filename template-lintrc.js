@@ -1,3 +1,5 @@
 'use strict';
 
-module.exports = { extends: 'octane' };
+module.exports = {
+  extends: ['recommended', 'octane', 'stylistic']
+};
