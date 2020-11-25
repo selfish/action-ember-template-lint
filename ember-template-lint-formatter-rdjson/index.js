@@ -46,7 +46,7 @@ function positionFromLineAndUTF16CodeUnitOffsetColumn(line, column, sourceLines)
 }
 
 function commonSuffixLength(str1, str2) {
-  let i = 0;
+  let i;
   for (i = 0; i < str1.length && i < str2.length; ++i) {
     if (str1[str1.length-(i+1)] !== str2[str2.length-(i+1)]) {
       break;
@@ -55,12 +55,13 @@ function commonSuffixLength(str1, str2) {
   return i;
 }
 
-function buildMinimumSuggestion(fix, source) {
-  const l = 0;//commonSuffixLength(fix.text, source.slice(fix.range[0], fix.range[1]));
+function buildMinimumSuggestion(result) {
+  const {fix, line, source} = result;
+  const l = commonSuffixLength(fix.text, source.slice(line, line));
   return {
     range: {
-      start: {line: 0, column: 0},//positionFromUTF16CodeUnitOffset(fix.range[0], source),
-      end: {line: 0, column: 1}//positionFromUTF16CodeUnitOffset(fix.range[1] - l, source)
+      start: positionFromUTF16CodeUnitOffset(line, source),
+      end: positionFromUTF16CodeUnitOffset(line - l, source)
     },
     text: fix.text.slice(0, fix.text.length - l)
   };
@@ -99,8 +100,7 @@ function buildRdJsonOutput(results, data) {
       };
 
       if (result.fix) {
-        debugger;
-        diagnostic.suggestions = [buildMinimumSuggestion(result.fix, source)];
+        diagnostic.suggestions = [buildMinimumSuggestion(result)];
       }
 
       rdjson.diagnostics.push(diagnostic);
@@ -110,15 +110,22 @@ function buildRdJsonOutput(results, data) {
   return JSON.stringify(rdjson);
 };
 
-let data = '';
+const data = require('./test.json');
 
-process.stdin.resume();
-process.stdin.setEncoding('utf8');
+// let data = '';
+//
+// process.stdin.resume();
+// process.stdin.setEncoding('utf8');
+//
+// process.stdin.on('data', function(chunk) {
+//   data += chunk;
+// });
+//
+// process.stdin.on('end', function() {
+//   const parsed = JSON.parse(data);
+//   const rdJson = buildRdJsonOutput(parsed);
+//   console.log(rdJson);
+// });
 
-process.stdin.on('data', function(chunk) {
-  data += chunk;
-});
-
-process.stdin.on('end', function() {
-  console.log(buildRdJsonOutput(JSON.parse(data)));
-});
+const rdJson = buildRdJsonOutput(data);
+console.log(rdJson);

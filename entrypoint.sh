@@ -10,28 +10,9 @@ fi
 
 "$(npm bin)"/ember-template-lint --version
 
-DISABLE_GITHUB_ACTIONS_ANNOTATIONS=true "$(npm bin)"/ember-template-lint --json ${INPUT_TEMPLATE_LINT_FLAGS:-'.'} > out.json
-#echo "========1"
-#echo "========1"
-#echo "========1"
-#echo "========1"
-#cat out.json
-#echo "========1"
-#echo "========1"
-#echo "========1"
-#echo "========1"
-#
-#echo "========2"
-#echo "========2"
-#echo "========2"
-#echo "========2"
-#cat out.json | node /formatter.js
-#echo "========2"
-#echo "========2"
-#echo "========2"
-#echo "========2"
-
-cat out.json | node /formatter.js | reviewdog -f=rdjson \
+DISABLE_GITHUB_ACTIONS_ANNOTATIONS=true "$(npm bin)"/ember-template-lint --json ${INPUT_TEMPLATE_LINT_FLAGS:-'.'} | \
+node /formatter.js | \
+reviewdog -f=rdjson \
   -name="${INPUT_TOOL_NAME}" \
   -reporter="${INPUT_REPORTER:-github-pr-review}" \
   -filter-mode="${INPUT_FILTER_MODE}" \
