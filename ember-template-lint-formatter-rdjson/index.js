@@ -59,8 +59,8 @@ function buildMinimumSuggestion(fix, source) {
   const l = 0;//commonSuffixLength(fix.text, source.slice(fix.range[0], fix.range[1]));
   return {
     range: {
-      start: 0,//positionFromUTF16CodeUnitOffset(fix.range[0], source),
-      end: 1//positionFromUTF16CodeUnitOffset(fix.range[1] - l, source)
+      start: {line: 0, column: 0},//positionFromUTF16CodeUnitOffset(fix.range[0], source),
+      end: {line: 0, column: 1}//positionFromUTF16CodeUnitOffset(fix.range[1] - l, source)
     },
     text: fix.text.slice(0, fix.text.length - l)
   };
