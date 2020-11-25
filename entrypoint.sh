@@ -12,6 +12,16 @@ fi
 
 "$(npm bin)"/ember-template-lint --json ${INPUT_TEMPLATE_LINT_FLAGS:-'.'} > out.json
 
+echo "=========="
+echo "=========="
+echo "=========="
+echo "=========="
+cat out.json | sed '/^#/d'
+echo "=========="
+echo "=========="
+echo "=========="
+echo "=========="
+
 cat out.json | sed '/^#/d' | node /formatter.js | reviewdog -f=rdjson \
       -name="${INPUT_TOOL_NAME}" \
       -reporter="${INPUT_REPORTER:-github-pr-review}" \
