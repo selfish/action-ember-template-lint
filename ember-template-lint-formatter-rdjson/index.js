@@ -120,5 +120,6 @@ process.stdin.on('data', function(chunk) {
 });
 
 process.stdin.on('end', function() {
+  data = data.match(/\{.*\}/)[0];
   console.log(buildRdJsonOutput(JSON.parse(data)));
 });
