@@ -18,7 +18,7 @@ echo "=========="
 echo "=========="
 echo "=========="
 
-cat out.json | node /formatter.js | reviewdog -f=rdjson \
+cat out.json | sed '/^#/d' | node /formatter.js | reviewdog -f=rdjson \
       -name="${INPUT_TOOL_NAME}" \
       -reporter="${INPUT_REPORTER:-github-pr-review}" \
       -filter-mode="${INPUT_FILTER_MODE}" \
