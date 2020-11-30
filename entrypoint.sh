@@ -22,4 +22,12 @@ reviewdog -f=rdjson \
   -fail-on-error="${INPUT_FAIL_ON_ERROR}" \
   -level="${INPUT_LEVEL}" >> output.json
 
+cat "==========="
+cat "==========="
+cat "==========="
+cat "==========="
 cat output.json
+cat "==========="
+cat "==========="
+cat "==========="
+cat "==========="
