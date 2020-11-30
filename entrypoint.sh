@@ -18,7 +18,7 @@ node /formatter.js | \
 reviewdog -f=rdjson \
   -name="${INPUT_TOOL_NAME}" \
   -reporter="${INPUT_REPORTER:-github-pr-review}" \
-  -filter-mode=notifier \
+  -filter-mode="notifier" \
   -fail-on-error="${INPUT_FAIL_ON_ERROR}" \
   -level="${INPUT_LEVEL}" \
   ${INPUT_REVIEWDOG_FLAGS}
