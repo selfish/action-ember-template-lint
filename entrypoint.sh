@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -o pipefail
+
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
 cd "${GITHUB_WORKSPACE}/${INPUT_WORKDIR}" || exit 1
@@ -12,6 +14,14 @@ fi
 
 DISABLE_GITHUB_ACTIONS_ANNOTATIONS=true "$(npm bin)"/ember-template-lint --json ${INPUT_TEMPLATE_LINT_FLAGS:-'.'} | \
 node /formatter.js | \
+
+cat reviewdog -f=rdjson \
+  -name="${INPUT_TOOL_NAME}" \
+  -reporter="${INPUT_REPORTER:-github-pr-review}" \
+  -filter-mode="${INPUT_FILTER_MODE}" \
+  -fail-on-error="${INPUT_FAIL_ON_ERROR}" \
+  -level="${INPUT_LEVEL}"
+
 reviewdog -f=rdjson \
   -name="${INPUT_TOOL_NAME}" \
   -reporter="${INPUT_REPORTER:-github-pr-review}" \
