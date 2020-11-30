@@ -20,14 +20,5 @@ reviewdog -f=rdjson \
   -reporter="${INPUT_REPORTER:-github-pr-review}" \
   -filter-mode="${INPUT_FILTER_MODE}" \
   -fail-on-error="${INPUT_FAIL_ON_ERROR}" \
-  -level="${INPUT_LEVEL}" >> output.json
-
-echo "==========="
-echo "==========="
-echo "==========="
-echo "==========="
-cat output.json
-echo "==========="
-echo "==========="
-echo "==========="
-echo "==========="
+  -level="${INPUT_LEVEL}" \
+  ${INPUT_REVIEWDOG_FLAGS}
