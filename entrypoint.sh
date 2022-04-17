@@ -12,7 +12,7 @@ fi
 
 "$(npm bin)"/ember-template-lint --version
 
-DISABLE_GITHUB_ACTIONS_ANNOTATIONS=true "$(npm bin)"/ember-template-lint --json ${INPUT_TEMPLATE_LINT_FLAGS:-'.'} > /output2.json
+DISABLE_GITHUB_ACTIONS_ANNOTATIONS=true "$(npm bin)"/ember-template-lint --format=json ${INPUT_TEMPLATE_LINT_FLAGS:-'.'} > /output2.json
 
 cat /output2.json
 
